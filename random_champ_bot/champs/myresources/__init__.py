@@ -13,5 +13,3 @@ CHAMP_IMAGES_FILENAMES = glob.glob(os.path.join(MY_DIR, "images/*"))
 IMAGE_BY_CHAMP_ID = {}
 for champ_image_filename in CHAMP_IMAGES_FILENAMES:
     IMAGE_BY_CHAMP_ID[os.path.basename(champ_image_filename).replace(".png", "")] = Image.open(champ_image_filename)
-
-print(IMAGE_BY_CHAMP_ID.keys())

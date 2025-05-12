@@ -60,7 +60,7 @@ def get_random_champs_weighted(N):
 
     if N < ceiled_N:
         for _ in range(ceiled_N - N):
-            selected_champs.remove(selected_champs[random.randint(0, len(selected_champs))])
+            selected_champs.remove(selected_champs[random.randint(0, len(selected_champs)-1)])
 
     return selected_champs
 

@@ -7,7 +7,7 @@ from discord.ext import commands
 from dotenv import load_dotenv
 from io import BytesIO
 
-from champs.random_champ_weighted import get_random_champs_weighted, make_43_grid_from_champs
+from champs.random_champ_weighted import get_random_champs_weighted, make_grid_from_champs
 
 load_dotenv()
 
@@ -50,7 +50,7 @@ async def get(ctx, N="40"):
         await ctx.send(wyns[0])
         return
     champs = get_random_champs_weighted(N)
-    img = make_43_grid_from_champs(champs)
+    img = make_grid_from_champs(champs)
     if special:
         champs = [champ[:len(champ)//2] for champ in champs]
         img = img.crop((0, 0, 30, 60))

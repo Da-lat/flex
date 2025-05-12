@@ -60,12 +60,12 @@ def get_random_champs_weighted(N):
 
     if N < ceiled_N:
         for _ in range(ceiled_N - N):
-            selected_champs.remove(selected_champs[random.randint(0, len(selected_champs))])
+            selected_champs.remove(selected_champs[random.randint(0, len(selected_champs)-1)])
 
     return selected_champs
 
 
-def make_43_grid_from_champs(champs):
+def make_grid_from_champs(champs):
     champ_images = [myresources.IMAGE_BY_CHAMP_ID[_champ_to_champ_id(champ)] for champ in champs]
     champ_images = [champ_image.resize((IMAGE_SIZE, IMAGE_SIZE)) for champ_image in champ_images]
     if len(champs) % 5 == 0:
@@ -89,6 +89,6 @@ if __name__ == "__main__":
     if len(sys.argv) == 2:
         N = int(sys.argv[1])
     selected_champs = get_random_champs_weighted(N=N)
-    img = make_43_grid_from_champs(selected_champs)
+    img = make_grid_from_champs(selected_champs)
     img.save("test.png")
     print(", ".join(selected_champs))

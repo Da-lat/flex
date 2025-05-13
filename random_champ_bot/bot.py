@@ -95,12 +95,12 @@ def _parse_get_args(args) -> Tuple[int, List, Special]:
     
     if N is None and not filter_strs and unrecognised_arguments:
         raise BotArgsError("No recognised arguments were passed.")
-    
-    if N < 1 or N > 120:
-        raise BotArgsError("Number must be a whole number between 1 & 120.")
 
     if N is None:
         N = 40
+    
+    if N < 1 or N > 120:
+        raise BotArgsError("Number must be a whole number between 1 & 120.")
 
     return N, filter_strs, special, unrecognised_arguments
 

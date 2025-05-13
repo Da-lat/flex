@@ -51,6 +51,15 @@ with open(os.path.join(MY_DIR, CHAMPS_BY_LGBT_FILENAME), "r") as f:
         CHAMPS_BY_LGBT[lgbt_type] = champs
 
 
+CHAMPS_BY_COMPLEXION_FILENAME = "champs_by_complexion.txt"
+with open(os.path.join(MY_DIR, CHAMPS_BY_COMPLEXION_FILENAME), "r") as f:
+    CHAMPS_BY_COMPLEXION = {}
+    for data in f.read().split('\n'):
+        complexion, champs = data.split("\t")[0], data.split("\t")[1].split(",")
+        CHAMPS_BY_COMPLEXION[complexion] = champs
+
+
+
 CHAMP_IMAGES_FILENAMES = glob.glob(os.path.join(MY_DIR, "images/*"))
 IMAGE_BY_CHAMP_ID = {}
 for champ_image_filename in CHAMP_IMAGES_FILENAMES:

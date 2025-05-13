@@ -107,6 +107,11 @@ class LgbtFilter(Filter):
         "GAY": "LGBT",
         "STRAIGHT": "NONLGBT",
         "NONLGBT": "NONLGBT",
+        "LGBTS": "LGBT",
+        "QUEERS": "LGBT",
+        "GAYS": "LGBT",
+        "STRAIGHTS": "NONLGBT",
+        "NONLGBTS": "NONLGBT",
     }
 
     filter_to_champ = myresources.CHAMPS_BY_LGBT
@@ -116,8 +121,31 @@ class LgbtFilter(Filter):
         return x.upper()
 
 
+class ComplexionFilter(Filter):
+    filter_strs_to_filters = {
+        "OTHER": "0",
+        "WHITE": "1",
+        "CHOCCY": "2",
+        "CHOC": "2",
+        "CHOCOLATE": "2",
+        "BLACK": "3",
+    }
+
+    filter_to_champ = myresources.CHAMPS_BY_COMPLEXION
+
+    def __init__(self):
+        self.filter_strs_to_filters.update(
+            {f"{s}S": v for s, v in self.filter_strs_to_filters.items()}
+        )
+        super().__init__()
+
+    @staticmethod
+    def process_filter_str(x: str):
+        return x.upper()
+
+
 def parse_filters(filter_strs):
-    filter_objs: List[Filter] = [RoleFilter(), ClassFilter(), DamageTypeFilter(), LgbtFilter()]
+    filter_objs: List[Filter] = [RoleFilter(), ClassFilter(), DamageTypeFilter(), LgbtFilter(), ComplexionFilter()]
     for filter_obj in filter_objs:
         for filter_str in filter_strs:
             if filter_obj.is_valid(filter_str):
@@ -125,7 +153,7 @@ def parse_filters(filter_strs):
     return filter_objs
 
 def is_valid_filter(filter_str):
-    filter_classes = [RoleFilter, ClassFilter, DamageTypeFilter, LgbtFilter]
+    filter_classes = [RoleFilter, ClassFilter, DamageTypeFilter, LgbtFilter, ComplexionFilter()]
     for filter_class in filter_classes:
         if filter_class.is_valid(filter_str):
             return True

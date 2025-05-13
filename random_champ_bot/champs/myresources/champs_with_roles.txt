@@ -84,7 +84,7 @@ Milio					Yes
 Miss Fortune				Yes		
 Mordekaiser	Yes					
 Morgana					Yes	
-Naafiri			Yes			
+Naafiri		Yes	Yes			
 Nami					Yes	
 Nasus	Yes					
 Nautilus					Yes	

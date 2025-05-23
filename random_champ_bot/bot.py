@@ -11,6 +11,7 @@ from typing import List, Tuple
 
 from champs import filters
 from champs import random_champ_weighted
+from champs import secret
 
 load_dotenv()
 
@@ -59,6 +60,7 @@ def _is_int(N):
 class Special(enum.Enum):
     WYN = 0
     HALF = 1
+    PERSON = 2
 
     @staticmethod
     def get_special(s: str):
@@ -66,6 +68,8 @@ class Special(enum.Enum):
             return Special.WYN
         if s == "0.5":
             return Special.HALF
+        if s.upper() in secret.OTP_CHAMPS:
+            return Special.PERSON
         return None
     
 
@@ -84,6 +88,9 @@ def _parse_get_args(args) -> Tuple[int, List, Special]:
 
     if special is Special.HALF:
         N = 1
+
+    if special is Special.PERSON:
+        filter_strs.append(args[0])
 
     for arg in args:
         if _is_int(arg) and N is None:
@@ -118,7 +125,10 @@ async def get(ctx, *args):
     if unrecognised_arguments and not special:
         await ctx.send(f"Unrecognised arguments: {', '.join(unrecognised_arguments)}.")
 
-    if filter_strs:
+    if special is Special.PERSON:
+        champ, img = secret.get_champ_and_img(filter_strs[0])
+        champs = [champ]
+    elif filter_strs:
         champs = random_champ_weighted.get_random_champs_with_filters(N=N, filter_strs=filter_strs)
         if not champs:
             await ctx.send("No champions found.")
@@ -128,7 +138,6 @@ async def get(ctx, *args):
         selected_champs_by_role = random_champ_weighted.get_random_champs_by_role_weighted(N=N)
         img = random_champ_weighted.make_grid_from_champs_by_role(selected_champs_by_role)
         champs = sum(selected_champs_by_role.values(), start=[])
-
 
     if special is Special.HALF:
         champs = [champ[:len(champ)//2] for champ in champs]

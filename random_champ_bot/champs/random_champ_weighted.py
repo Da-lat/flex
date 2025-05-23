@@ -48,13 +48,15 @@ def get_random_champs_by_role_weighted(N):
 
 
     selected_champs_by_role = {role: [] for role in constants.ROLES}
+    all_picked_champs = []
     for role in constants.ROLES:
         weighted_champs = sum([[champ] * inverse_champs_by_occurence[champ] for champ in champs_by_role[role]], start=[])
         random.shuffle(weighted_champs)
         i = 0
         while i < ceiled_N // 5:
             potential_champ = weighted_champs.pop()
-            if potential_champ not in selected_champs_by_role[role]:
+            if potential_champ not in all_picked_champs and potential_champ not in selected_champs_by_role[role]:
+                all_picked_champs.append(potential_champ)
                 selected_champs_by_role[role].append(potential_champ)
                 i += 1
 

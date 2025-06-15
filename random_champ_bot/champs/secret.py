@@ -21,6 +21,7 @@ CHAMP_STR_TO_CHAMP = {
     "KAISA": "Kai'Sa",
     "KAI'SA": "Kai'Sa",
     "VAYNE": "Vayne",
+    "SHEN": "Shen",
 }
 OTP_CHAMPS = list(CHAMP_STR_TO_CHAMP.keys())
 
@@ -36,6 +37,7 @@ CHAMP_TO_OTP_IMAGE_PATH = {
     "Lillia": "jay1.png",
     "Kai'Sa": "wyn1.png",
     "Vayne": "sam1.png",
+    "Shen": "dylan1.png",
 }
 
 

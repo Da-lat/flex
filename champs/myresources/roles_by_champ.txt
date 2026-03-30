@@ -42,7 +42,7 @@ Gragas	TOP,JUNGLE,MID
 Graves	JUNGLE
 Gwen	TOP
 Hecarim	JUNGLE
-Heimerdinger	TOP,MID,SUPP
+Heimerdinger	TOP,MID
 Hwei	MID,SUPP
 Illaoi	TOP
 Irelia	TOP,MID
@@ -132,13 +132,13 @@ Syndra	MID
 Tahm Kench	TOP,SUPP
 Taliyah	JUNGLE,MID
 Talon	JUNGLE,MID
-Taric	MID,SUPP
+Taric	SUPP
 Teemo	TOP,JUNGLE,SUPP
 Thresh	SUPP
 Tristana	MID,BOT
 Trundle	TOP,JUNGLE
 Tryndamere	TOP
-Twisted Fate	TOP,MID,BOT
+Twisted Fate	TOP,MID
 Twitch	BOT,SUPP
 Udyr	TOP,JUNGLE
 Urgot	TOP

@@ -334,26 +334,42 @@ def get_player_mapping_overview_rows(
     if not identifiers:
         return output
 
-    tokens = {token.strip().casefold() for token in identifiers if token.strip()}
-    if not tokens:
+    normalized_identifiers = [token.strip() for token in identifiers if token.strip()]
+    if not normalized_identifiers:
         return output
 
-    filtered: list[PlayerMappingOverviewRow] = []
+    row_by_name_key = {row.name.casefold(): row for row in output}
+    names_by_username: dict[str, set[str]] = {}
     for row in output:
-        if row.name.casefold() in tokens:
-            filtered.append(row)
+        for username in row.usernames:
+            names_by_username.setdefault(username, set()).add(row.name)
+
+    selected_names: set[str] = set()
+    for token in normalized_identifiers:
+        # Prefer actual name resolution over username resolution.
+        row = row_by_name_key.get(token.casefold())
+        if row is not None:
+            selected_names.add(row.name)
             continue
-        if any(username.casefold() in tokens for username in row.usernames):
-            filtered.append(row)
-    return filtered
+
+        for name in names_by_username.get(token, set()):
+            selected_names.add(name)
+
+    return [row for row in output if row.name in selected_names]
 
 
 def _resolve_query_names(session: Session, identifiers: list[str]) -> set[str]:
     resolved: list[str] = []
     seen_identifiers: set[str] = set()
+
+    player_names = session.scalars(select(PlayerRecord.name)).all()
+    canonical_name_by_casefold = {name.casefold(): name for name in player_names}
+
     for raw in identifiers:
         token = raw.strip()
-        if not token or token in seen_identifiers:
+        if not token:
+            continue
+        if token in seen_identifiers:
             continue
         seen_identifiers.add(token)
 
@@ -366,13 +382,21 @@ def _resolve_query_names(session: Session, identifiers: list[str]) -> set[str]:
         for row in mapping_rows:
             if row.name not in mapped_names:
                 mapped_names.append(row.name)
+            canonical_name_by_casefold.setdefault(row.name.casefold(), row.name)
         if mapped_names:
             if token in mapped_names:
                 resolved.append(token)
             else:
                 resolved.append(mapped_names[0])
             continue
+
+        canonical_name = canonical_name_by_casefold.get(token.casefold())
+        if canonical_name is not None:
+            resolved.append(canonical_name)
+            continue
+
         resolved.append(token)
+
     return set(resolved)
 
 

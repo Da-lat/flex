@@ -34,8 +34,8 @@ MATCH_HELP = """`champsmatch` commands:
   Link a Discord user to their league username for voice-based draft detection.
   If no user is provided, links the command caller.
 
-- `champsmatch viewplayers [player_or_username ...]`
-  Show role mappings table (name, usernames, roles, linked Discord IDs), optionally filtered.
+- `champsmatch viewplayers <player_or_username ...>`
+  Show role mappings table (name, usernames, roles, linked Discord IDs) for specified players.
 
 - `champsmatch help`
   Show this help."""
@@ -147,8 +147,8 @@ async def _handle_match_addplayer(ctx, args, db_path: str) -> None:
         await ctx.send("Usage: `champsmatch addplayer <player> <name> [primary_role] [secondary_role]`")
         return
     username = args[0].strip()
-    primary_role = args[-1] if len(args) >= 3 else None
-    secondary_role = args[-2] if len(args) >= 4 else None
+    primary_role = args[-2] if len(args) >= 4 else (args[-1] if len(args) >= 3 else None)
+    secondary_role = args[-1] if len(args) >= 4 else None
     if secondary_role:
         name = " ".join(args[1:-2]).strip()
     elif primary_role:
@@ -281,6 +281,9 @@ def _format_player_mapping_table(rows) -> str:
 
 
 async def _handle_match_viewplayers(ctx, args, db_path: str) -> None:
+    if not args:
+        await ctx.send("Usage: `champsmatch viewplayers <player_or_username ...>`")
+        return
     rows = await asyncio.to_thread(db.get_player_mapping_overview_rows, db_path, list(args) if args else None)
     await ctx.send(_format_player_mapping_table(rows))
 

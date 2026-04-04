@@ -1,4 +1,9 @@
 .env
 .python-version
+.venv
+elo/
 *.pyc
 misc
+.vscode/
+.pytest_cache/
+__pycache__/

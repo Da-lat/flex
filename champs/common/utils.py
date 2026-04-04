@@ -1,5 +1,4 @@
-
-from . import myresources
+from .. import myresources
 
 
 def get_all_champs():

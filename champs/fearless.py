@@ -12,8 +12,7 @@ ALL_CHAMPS = get_all_champs()
 CHAMP_LOOKUP = {re.sub(r"[^a-z0-9]", "", champ.lower()): champ for champ in ALL_CHAMPS}
 
 FEARLESS_BY_CHANNEL: dict[int, FearlessState] = {}
-
-USAGE = """`champsfearless` commands:
+HELP = """`champsfearless` commands:
 
 - `champsfearless enable`
   Enable fearless tracking in this channel.
@@ -200,7 +199,7 @@ async def handle_fearless(ctx, args) -> None:
     subcommand = args[0].lower() if args else "status"
 
     if subcommand == "help":
-        await ctx.send(USAGE)
+        await ctx.send(HELP)
         return
 
     if subcommand == "status":
@@ -274,4 +273,4 @@ async def handle_fearless(ctx, args) -> None:
         await ctx.send(f"Fearless bans overridden. Current bans: {len(state.banned)} champion(s).")
         return
 
-    await ctx.send(USAGE)
+    await ctx.send(HELP)

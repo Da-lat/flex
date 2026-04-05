@@ -3,7 +3,7 @@ import re
 
 from champs.db import db
 
-PLAYER_HELP = """`champsplayer` commands:
+HELP = """`champsplayer` commands:
 
 - `champsplayer add <username> <name> [primary_role] [secondary_role]`
   Add a username -> name mapping, optionally scoped by roles.
@@ -20,7 +20,9 @@ PLAYER_HELP = """`champsplayer` commands:
   If no user is provided, links the command caller.
 
 - `champsplayer help`
-  Show this help."""
+  Show this help.
+
+You can also use `champshelp player`."""
 
 
 def _format_player_mapping_table(rows) -> str:
@@ -59,7 +61,7 @@ def _format_player_mapping_table(rows) -> str:
 
 
 async def _handle_player_help(ctx) -> None:
-    await ctx.send(PLAYER_HELP)
+    await ctx.send(HELP)
 
 
 async def _handle_player_add(ctx, args, db_path: str) -> None:

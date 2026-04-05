@@ -14,7 +14,7 @@ OFF_ROLE_PENALTY = 40
 RANDOM_GAP_SLACK = 10
 RANDOM_PENALTY_SLACK = 20
 
-DRAFT_HELP = """`champsdraft` usage:
+HELP = """`champsdraft` usage:
 
 - `champsdraft`
   Use players currently in voice channels.
@@ -26,7 +26,6 @@ DRAFT_HELP = """`champsdraft` usage:
   `+` opts a player in and `-` opts a player out.
   If no explicit list is provided, voice-channel players are used as the base.
 """
-
 
 @dataclass(frozen=True)
 class DraftPlayer:
@@ -418,7 +417,7 @@ def _format_missing_setup_message(unknown_usernames: list[str], missing_roles: l
 async def handle_draft(ctx, args, db_path: str) -> None:
     explicit, added, removed, wants_help = _parse_draft_args(args)
     if wants_help:
-        await ctx.send(DRAFT_HELP)
+        await ctx.send(HELP)
         return
 
     resolver_state = _build_resolver_state(db_path)

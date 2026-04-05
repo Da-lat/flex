@@ -1,5 +1,16 @@
 from champs.db import db
 
+HELP = """`champselo` usage:
+
+- `champselo`
+  Show full ELO table.
+
+- `champselo <player_or_username ...>`
+  Show filtered rows for specific players/usernames.
+
+- `champselo help`
+  Show this help."""
+
 
 def _format_elo_table(rows) -> str:
     if not rows:
@@ -34,5 +45,8 @@ def _format_elo_table(rows) -> str:
 
 
 async def handle_elo(ctx, args, db_path: str) -> None:
+    if args and args[0].lower() in {"help", "--help", "-h"}:
+        await ctx.send(HELP)
+        return
     rows = db.get_elo_rows(db_path, list(args) if args else None)
     await ctx.send(_format_elo_table(rows))

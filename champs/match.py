@@ -13,8 +13,7 @@ from champs import fearless
 from champs.payloads.match import Match
 from champs.scoreboard import scoreboard_cv
 
-
-MATCH_HELP = """`champsmatch` commands:
+HELP = """`champsmatch` commands:
 
 - `champsmatch`
   Attach a scoreboard image to parse and review.
@@ -129,7 +128,7 @@ async def _read_attachment_to_display_match(ctx, db_path: str) -> Match | None:
 
 
 async def _handle_match_help(ctx) -> None:
-    await ctx.send(MATCH_HELP)
+    await ctx.send(HELP)
 
 
 async def _handle_match_delete(ctx, db_path: str) -> None:

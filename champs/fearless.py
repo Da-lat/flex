@@ -96,12 +96,17 @@ def _format_duration(duration: timedelta) -> str:
     return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
 
 
+def _format_utc_timestamp(value: datetime) -> str:
+    return value.astimezone(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+
+
 def _apply_rollover(state: FearlessState, now: datetime) -> bool:
     if state.start is None:
         return False
     if now - state.start < FEARLESS_WINDOW:
         return False
-    state.start = now
+    # Keep mode enabled but wait for the next recorded game to start a new window.
+    state.start = None
     state.banned.clear()
     state.matches.clear()
     return True
@@ -149,6 +154,10 @@ def record_match_champions(channel_id: int, champions: list[str], *, now: dateti
     except Exception as exc:
         return False, f"Fearless was enabled, but bans were not updated: {exc}"
 
+    # Session window starts on first recorded game, not on enable.
+    if state.start is None:
+        state.start = now
+
     state.matches.append(match)
     for champ in match.champs:
         if champ not in state.banned:
@@ -170,10 +179,14 @@ def _status_text(channel_id: int, now: datetime | None = None) -> str:
         f"Banned champions: `{len(state.banned)}`",
     ]
 
-    if state.enabled and state.start is not None:
-        remaining = _state_remaining_window(state, now)
-        if remaining is not None:
-            lines.append(f"Auto-reset in: `{_format_duration(remaining)}`")
+    if state.enabled:
+        if state.start is None:
+            lines.append("Clock: waiting for first recorded game.")
+        else:
+            lines.append(f"Clock started: `{_format_utc_timestamp(state.start)}`")
+            remaining = _state_remaining_window(state, now)
+            if remaining is not None:
+                lines.append(f"Auto-reset in: `{_format_duration(remaining)}`")
 
     return "\n".join(lines)
 
@@ -199,8 +212,6 @@ async def handle_fearless(ctx, args) -> None:
         assert state is not None
         already_enabled = state.enabled
         state.enabled = True
-        if state.start is None:
-            state.start = _utc_now()
         if already_enabled:
             await ctx.send(f"Fearless is already enabled.\n{_status_text(channel_id)}")
         else:
@@ -219,7 +230,7 @@ async def handle_fearless(ctx, args) -> None:
         assert state is not None
         state.banned.clear()
         state.matches.clear()
-        state.start = _utc_now()
+        state.start = None
         await ctx.send("Fearless state reset for this channel.")
         return
 

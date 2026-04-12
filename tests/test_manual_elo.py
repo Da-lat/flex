@@ -133,6 +133,7 @@ def test_should_print_ratings_only_for_rating_relevant_actions() -> None:
         def __init__(
             self,
             *,
+            show_elo=False,
             input_file=None,
             players_file=None,
             recalculate=False,
@@ -143,6 +144,7 @@ def test_should_print_ratings_only_for_rating_relevant_actions() -> None:
             set_preferred_role=None,
             show_player_mappings=False,
         ) -> None:
+            self.show_elo = show_elo
             self.input_file = input_file
             self.players_file = players_file
             self.recalculate = recalculate
@@ -154,6 +156,7 @@ def test_should_print_ratings_only_for_rating_relevant_actions() -> None:
             self.show_player_mappings = show_player_mappings
 
     assert manual_elo._should_print_ratings(Args(show_player_mappings=True)) is False
+    assert manual_elo._should_print_ratings(Args(show_elo=True)) is True
     assert manual_elo._should_print_ratings(Args(players_file="players.json")) is True
     assert manual_elo._should_print_ratings(Args(recalculate=True)) is True
     assert manual_elo._should_print_ratings(Args(reset_history=True)) is True

@@ -233,7 +233,8 @@ def _print_player_mappings_table(db_path: str) -> None:
 
 def _should_print_ratings(args) -> bool:
     return bool(
-        args.input_file
+        args.show_elo
+        or args.input_file
         or args.players_file
         or args.recalculate
         or args.reset_history
@@ -255,6 +256,11 @@ def main() -> None:
     parser.add_argument("--db-path", default=os.getenv("CHAMPS_DB_PATH", "/opt/random-champs/data/champs.db"))
     parser.add_argument("--input-file", help="Path to JSON payload for manual match ingestion")
     parser.add_argument("--players-file", help="Path to JSON payload for player mapping ingestion")
+    parser.add_argument(
+        "--show-elo",
+        action="store_true",
+        help="Show current ELO table without performing any other operation.",
+    )
     parser.add_argument(
         "--set-mapping",
         nargs="+",
@@ -311,7 +317,8 @@ def main() -> None:
     args = parser.parse_args()
 
     if (
-        not args.input_file
+        not args.show_elo
+        and not args.input_file
         and not args.players_file
         and not args.recalculate
         and not args.reset_history
@@ -322,7 +329,7 @@ def main() -> None:
         and not args.show_player_mappings
     ):
         raise ValueError(
-            "Provide --input-file, --players-file, --recalculate, --set-mapping, "
+            "Provide --show-elo, --input-file, --players-file, --recalculate, --set-mapping, "
             "--delete-player, --set-preferred-role, --reset-history, --soft-reset, --show-player-mappings, or a combination."
         )
 

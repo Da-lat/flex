@@ -574,7 +574,7 @@ async def _post_new_draft(ctx, db_path: str, *, players: list[DraftPlayer], pref
     except ValueError as exc:
         await ctx.send(str(exc))
         return
-    message = _format_draft_message(result) + "\n" + f"Dodge window: `{DODGE_WINDOW_SECONDS}s`. Use `/dodge` or `champsdodge`."
+    message = _format_draft_message(result) + "\n" + f"Dodge window: `{DODGE_WINDOW_SECONDS}s`. Use `/dodge` to dodge: 10 CP penalty shared between all dodgers."
     if prefix_message:
         message = prefix_message + "\n" + message
     await ctx.send(message)

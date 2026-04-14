@@ -17,11 +17,11 @@ def format_elo_rows(
     rank_header = "#" if short_headers else "Rank"
     player_header = "Player"
     cp_header = "CP"
-    elo_header = "E" if short_headers else "ELO"
+    elo_header = "ELO"
     wins_header = "W" if short_headers else "Wins"
     losses_header = "L" if short_headers else "Losses"
     dodges_header = "D" if short_headers else "Dodges"
-    scale_header = "S" if short_headers else "Scale"
+    scale_header = "S" if short_headers else "Penalty scale"
 
     rank_width = max(len(rank_header), *(len(str(row.rank)) for row in rows))
     player_width = max(len(player_header), *(len(row.player) for row in rows))

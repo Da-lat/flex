@@ -6,13 +6,11 @@ from champs.random_champs.filters import DamageTypeFilter, RoleFilter
 
 
 def _weighted_role_pool(role: str) -> set[str]:
-    role_index = constants.ROLES.index(role) + 1
-    champs = set()
-    for row in myresources.CHAMPS_WITH_ROLE_DATA:
-        parts = row.split("\t")
-        if len(parts) > role_index and parts[role_index]:
-            champs.add(parts[0])
-    return champs
+    return {
+        row["champion"]
+        for row in myresources.CHAMPS_WITH_ROLE_DATA
+        if row.get(role, "").strip()
+    }
 
 
 def _filter_of_type(filter_objects, filter_type):

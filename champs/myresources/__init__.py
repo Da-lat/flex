@@ -1,6 +1,8 @@
+import csv
 import glob
-import os
 import json
+import os
+
 from PIL import Image
 
 RESOURCE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -15,22 +17,18 @@ with open(os.path.join(RESOURCE_DIR, PLAYER_TO_NAME_FILENAME), "r") as f:
     PLAYER_TO_NAME = json.load(f)
 
 
-CHAMPS_WITH_ROLE_DATA_FILENAME = "champs_with_roles.txt"
-with open(os.path.join(RESOURCE_DIR, CHAMPS_WITH_ROLE_DATA_FILENAME), "r") as f:
-    CHAMPS_WITH_ROLE_DATA = f.read().splitlines()
-
 ROLE_COLUMNS = ("TOP", "JUNGLE", "MID", "BOT", "SUPP")
+CHAMPS_WITH_ROLE_DATA_FILENAME = "champs_with_roles.csv"
+with open(os.path.join(RESOURCE_DIR, CHAMPS_WITH_ROLE_DATA_FILENAME), "r", newline="") as f:
+    CHAMPS_WITH_ROLE_DATA = list(csv.DictReader(f))
 
 
 def _parse_champs_by_role_from_weighted_data():
     champs_by_role = {role: [] for role in ROLE_COLUMNS}
-    for data in CHAMPS_WITH_ROLE_DATA:
-        if not data:
-            continue
-        parts = data.split("\t")
-        champ = parts[0]
-        for marker, role in zip(parts[1:], ROLE_COLUMNS):
-            if marker:
+    for row in CHAMPS_WITH_ROLE_DATA:
+        champ = row["champion"]
+        for role in ROLE_COLUMNS:
+            if row.get(role, "").strip():
                 champs_by_role[role].append(champ)
     return champs_by_role
 

@@ -17,7 +17,22 @@ with open(os.path.join(RESOURCE_DIR, PLAYER_TO_NAME_FILENAME), "r") as f:
 
 CHAMPS_WITH_ROLE_DATA_FILENAME = "champs_with_roles.txt"
 with open(os.path.join(RESOURCE_DIR, CHAMPS_WITH_ROLE_DATA_FILENAME), "r") as f:
-    CHAMPS_WITH_ROLE_DATA = f.read().split("\n")
+    CHAMPS_WITH_ROLE_DATA = f.read().splitlines()
+
+ROLE_COLUMNS = ("TOP", "JUNGLE", "MID", "BOT", "SUPP")
+
+
+def _parse_champs_by_role_from_weighted_data():
+    champs_by_role = {role: [] for role in ROLE_COLUMNS}
+    for data in CHAMPS_WITH_ROLE_DATA:
+        if not data:
+            continue
+        parts = data.split("\t")
+        champ = parts[0]
+        for marker, role in zip(parts[1:], ROLE_COLUMNS):
+            if marker:
+                champs_by_role[role].append(champ)
+    return champs_by_role
 
 
 ROLES_BY_CHAMP_FILENAME = "roles_by_champ.txt"
@@ -27,12 +42,8 @@ with open(os.path.join(RESOURCE_DIR, ROLES_BY_CHAMP_FILENAME), "r") as f:
         champ, role = data.split("\t")[0], data.split("\t")[1].split(",")
         ROLES_BY_CHAMP[champ] = role
 
-CHAMPS_BY_ROLE_FILENAME = "champs_by_role.txt"
-with open(os.path.join(RESOURCE_DIR, CHAMPS_BY_ROLE_FILENAME), "r") as f:
-    CHAMPS_BY_ROLE = {}
-    for data in f.read().split('\n'):
-        role, champs = data.split("\t")[0], data.split("\t")[1].split(",")
-        CHAMPS_BY_ROLE[role] = champs
+
+CHAMPS_BY_ROLE = _parse_champs_by_role_from_weighted_data()
 
 CHAMPS_BY_DAMAGE_TYPE_FILENAME = "champs_by_damage_type.txt"
 with open(os.path.join(RESOURCE_DIR, CHAMPS_BY_DAMAGE_TYPE_FILENAME), "r") as f:

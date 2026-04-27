@@ -31,21 +31,20 @@ def _champ_to_champ_id(champ):
     return champ.replace(" ", "").replace(".", "").replace("'", "")
 
 
-def get_random_champs_by_role_weighted(N, fearless_bans=[]):
+def get_random_champs_by_role_weighted(N, fearless_bans=None):
+    fearless_bans = set(fearless_bans or [])
     ceiled_N = math.ceil(N / 5) * 5
-    champs_by_role = {role: [] for role in constants.ROLES}
-    champs_by_occurence = {}
+    champs_by_role = {role: list(myresources.CHAMPS_BY_ROLE[role]) for role in constants.ROLES}
+    champs_by_occurence = {champ: 0 for champ in myresources.CHAMPS}
     inverse_champs_by_occurence = {}
 
-    for champ_data in myresources.CHAMPS_WITH_ROLE_DATA:
-        champ, parsed_roles = champ_data.split("\t")[0], champ_data.split("\t")[1:-1]
-        champs_by_occurence[champ] = 0
-        for parsed_role, ROLE in zip(parsed_roles, constants.ROLES):
-            if parsed_role:
-                champs_by_role[ROLE].append(champ)
-                champs_by_occurence[champ] += 1
-        inverse_champs_by_occurence[champ] = round(1 / champs_by_occurence[champ] * 60)
+    for role in constants.ROLES:
+        for champ in champs_by_role[role]:
+            champs_by_occurence[champ] += 1
 
+    for champ, occurrence in champs_by_occurence.items():
+        if occurrence:
+            inverse_champs_by_occurence[champ] = round(1 / occurrence * 60)
 
     selected_champs_by_role = {role: [] for role in constants.ROLES}
     all_picked_champs = []

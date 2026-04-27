@@ -198,17 +198,29 @@ class ComplexionFilter(Filter):
         return x.upper()
 
 
+def _filter_objects() -> List[Filter]:
+    return [
+        RoleFilter(),
+        ClassFilter(),
+        DamageTypeFilter(),
+        GenderFilter(),
+        LgbtFilter(),
+        ComplexionFilter(),
+    ]
+
+
 def parse_filters(filter_strs):
-    filter_objs: List[Filter] = [RoleFilter(), ClassFilter(), DamageTypeFilter(), GenderFilter(), LgbtFilter(), ComplexionFilter()]
-    for filter_obj in filter_objs:
-        for filter_str in filter_strs:
+    filter_objs = _filter_objects()
+    for filter_str in filter_strs:
+        for filter_obj in filter_objs:
             if filter_obj.is_valid(filter_str):
                 filter_obj.add(filter_str)
+                break
     return filter_objs
 
+
 def is_valid_filter(filter_str):
-    filter_classes = [RoleFilter, ClassFilter, DamageTypeFilter, GenderFilter(), LgbtFilter, ComplexionFilter()]
-    for filter_class in filter_classes:
-        if filter_class.is_valid(filter_str):
+    for filter_object in _filter_objects():
+        if filter_object.is_valid(filter_str):
             return True
     return False
